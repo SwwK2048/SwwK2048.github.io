@@ -1,2 +1,1 @@
-# SwwK2048.github.io
-# Okay i don't understand what am i doing
+I don't know what should be here, but sure, welcome to readme I guess.
