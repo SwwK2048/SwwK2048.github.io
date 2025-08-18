@@ -77,7 +77,7 @@
         async function getCount() {
             const res = await fetch("https://swwk2048-github-io.onrender.com/count");
             const data = await res.json();
-            if (data.count>0){
+            if (data.count[0]>0){
                 document.getElementById("counter").textContent = `${data.count} people`;
             }
             else{
@@ -94,7 +94,7 @@
         async function addClick() {
             const res = await fetch("https://swwk2048-github-io.onrender.com/click", { method: "POST" });
             const data = await res.json();
-            if (data.count>0){
+            if (data.count[0]>0){
                 document.getElementById("counter").textContent = `${data.count} people`;
             }
             else{
