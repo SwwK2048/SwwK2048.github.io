@@ -75,7 +75,8 @@ app.post("/click", (req, res) => {
     res.json({ count: count[0] });
 });
 
-app.listen(3000, () => console.log("Serwer działa na porcie 3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Nasłuchuję na porcie ${PORT}`));
 
 // Funkcja zapisu przy zamykaniu
 function zapiszDane() {
