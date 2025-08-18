@@ -97,3 +97,5 @@ process.on('SIGTERM', () => {
 process.on('exit', () => {
   zapiszDane();
 });
+
+setInterval(zapiszDane(),600000);
