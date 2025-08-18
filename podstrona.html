@@ -1,13 +1,109 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <title>Podstrona</title>
+    <meta charset="UTF-8">
+    <title>Parallel universe</title>
+    <style>
+        body {
+            background-color: lightblue; /* nazwa koloru */
+            display: flex;
+            flex-direction: column;
+            min-height: 0vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            justify-content: space-between;
+            padding: 20px;
+            font-size: 1.5em;
+        }
+        h1 {
+            margin-top: 0;
+        }
+        #counter {
+            font-size: 1.5em;
+        }
+        #clickBtn {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+
+        .gif-center {
+        display: block;
+        margin: 0 auto;
+        }
+        
+
+    </style>
 </head>
 <body>
-  <h1>To jest podstrona</h1>
-  <p>Witaj na mojej podstronie!</p>
-  <!-- Hiperlink do strony głównej -->
-  <a href="index.html">Powrót do strony głównej</a>
+    <h1>In parallel universe there is a earth just like ours</h1>
+    <img src="earth_spinning.gif" width="300" height="300" class="gif-center">
+    <p>people live there in peace</p>
+    <span style="
+        text-align:left;
+        position: absolute;
+        left: 20px;
+        top: 200px;
+    ">
+    <table>
+        <tr>
+        <td>Server started 18 september 2025</td>
+        </tr>
+        <tr>
+        <td>Born since start:</td>
+        <td><div id="born"></div></td>
+        </tr>
+        <tr>
+        <td>Die naturally since start:</td>
+        <td><div id="die"></div></td>
+        </tr>
+        <tr>
+        <td>Die by clicking since start:</td>
+        <td><div id="kill"></div></td>
+        </tr>
+        <tr>
+        <td><div id="date"></div></td>
+        </tr>
+    </table>
+    </span>
+
+    <div id="counter"></div>
+
+    <p>to be exact. <br> <br> <br>But every time this button is clicked</p>
+    <button id="clickBtn" type="button">Click me!</button>
+    <p>One of them die. <br> Help me to kill them all! </p>
+
+    <script>
+        async function getCount() {
+            const res = await fetch("http://localhost:3000/count");
+            const data = await res.json();
+            if (data.count>0){
+                document.getElementById("counter").textContent = `${data.count} people`;
+            }
+            else{
+                document.getElementById("counter").textContent = `Congratulation you killed them all!`;
+            }
+            document.getElementById("born").textContent = data.count[1];
+            document.getElementById("die").textContent = data.count[2];
+            document.getElementById("kill").textContent = data.count[3];
+            if (data.count[4]){
+                document.getElementById("date").innerHTML = `Date you kil them all:<br>${data.count[5]} `;
+            }
+        }
+
+        async function addClick() {
+            const res = await fetch("http://localhost:3000/click", { method: "POST" });
+            const data = await res.json();
+            if (data.count>0){
+                document.getElementById("counter").textContent = `${data.count} people`;
+            }
+            else{
+                document.getElementById("counter").textContent = `Congratulation you killed them all!`;
+            }
+        }
+
+        document.getElementById("clickBtn").addEventListener("click", addClick);
+        getCount();
+        setInterval(getCount, 1000);
+    </script>
 </body>
-</html>

@@ -1,0 +1,25 @@
+{
+  "name": "swwk2048.github.io",
+  "version": "1.0.0",
+  "description": "I don't know what should be here, but sure, welcome to readme I guess.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SwwK2048/SwwK2048.github.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SwwK2048/SwwK2048.github.io/issues"
+  },
+  "homepage": "https://github.com/SwwK2048/SwwK2048.github.io#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
