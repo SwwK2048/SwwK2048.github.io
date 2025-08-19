@@ -1,6 +1,19 @@
 const cors = require('cors');
 const fs = require('fs');
 const express = require('express');
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL, // ustaw w Renderze w Environment Variables
+  ssl: { rejectUnauthorized: false } // wymagane w Render
+});
+
+
+async function init() {
+  await client.connect();
+
+
+
 
 const app = express();
 app.use(cors());
@@ -10,10 +23,35 @@ let deltacount = 0.0;
 let deltadeath = 0.0;
 //const count = [0,0,0,0,false,new Date()]; // liczba w pamięci
 let ran=0;
-const zawartosc = fs.readFileSync('count.json', 'utf8');
+  // Tworzymy tabelę, jeśli nie istnieje
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS count_data (
+      id SERIAL PRIMARY KEY,
+      values_json JSON NOT NULL
+    )
+  `);
 
-// Załaduj zapisany licznik
-const count = JSON.parse(zawartosc)
+  // Wczytujemy dane, jeśli są zapisane
+  const res = await client.query('SELECT values_json FROM count_data WHERE id = 1');
+  if (res.rows.length > 0) {
+    count = res.rows[0].values_json;
+    console.log('📥 Wczytano dane z bazy:', count);
+  } else {
+    // Pierwsze uruchomienie — wstaw pusty rekord
+    await client.query('INSERT INTO count_data (id, values_json) VALUES (1, $1)', [count]);
+  }
+}
+
+// Funkcja zapisu
+async function saveData() {
+  await client.query('UPDATE count_data SET values_json = $1 WHERE id = 1', [count]);
+  console.log('💾 Dane zapisane do bazy:', new Date().toLocaleString());
+}
+
+// Uruchamiamy inicjalizację
+init();
+
+
 
 setInterval(() => {
   deltacount=count[0]*5*Math.pow(10,-10);
@@ -78,24 +116,7 @@ app.post("/click", (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Nasłuchuję na porcie ${PORT}`));
 
-// Funkcja zapisu przy zamykaniu
-function zapiszDane() {
-  fs.writeFileSync('count.json', JSON.stringify(count, null, 2), 'utf8');
-  console.log("Dane zapisane ✅");
-}
+// Zapis co 10 minut
+setInterval(saveData, 10 * 60 * 1000);
 
-process.on('SIGINT', () => {
-  zapiszDane();
-  process.exit();
-});
 
-process.on('SIGTERM', () => {
-  zapiszDane();
-  process.exit();
-});
-
-process.on('exit', () => {
-  zapiszDane();
-});
-
-setInterval(zapiszDane(),600000);
