@@ -20,6 +20,7 @@
   "homepage": "https://github.com/SwwK2048/SwwK2048.github.io#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "pg": "^8.11.5"
   }
 }
