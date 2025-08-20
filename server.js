@@ -3,17 +3,76 @@ const fs = require('fs');
 const express = require('express');
 const { Client } = require('pg');
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL, // ustaw w Renderze w Environment Variables
-  ssl: { rejectUnauthorized: false } // wymagane w Render
-});
 
+// Lepiej trzymać dane dostępowe w zmiennych środowiskowych, ale na początek:
+const connectionString = 'postgresql://count_db_user:CWIVhCDzyu6wJpcCGBS6rw067Uh0e25J@dpg-d2i8bap5pdvs73evk21g-a.frankfurt-postgres.render.com/count_db';
+//let count = [0, 0, 0, 0, false, new Date()]; 
+async function fetchData() {
+  const client = new Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
 
-async function init() {
-  await client.connect();
+  try {
+    await client.connect();
+    console.log('✅ Połączono z bazą danych');
 
+    const res = await client.query('SELECT * FROM count_data;');
+    console.log('📊 Dane z bazy:', res.rows);
 
+    if (res.rows.length > 0) {
+      const row = res.rows[0];
+      count = [
+        Number(row.col1),
+        Number(row.col2),
+        Number(row.col3),
+        Number(row.col4),
+        row.col5,
+        new Date(row.col6)
+      ];
+    }
+  } catch (err) {
+    console.error('❌ Błąd podczas pobierania danych:', err);
+  } finally {
+    await client.end();
+  }
+}
 
+async function saveData() {
+  const client = new Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  try {
+    await client.connect();
+
+    const query = `
+      UPDATE count_data
+      SET col1 = $1,
+          col2 = $2,
+          col3 = $3,
+          col4 = $4,
+          col5 = $5,
+          col6 = $6
+    `;
+
+    await client.query(query, [
+      count[0],
+      count[1],
+      count[2],
+      count[3],
+      count[4],
+      count[5]
+    ]);
+
+    console.log("💾 Zapisano dane do bazy");
+  } catch (err) {
+    console.error("❌ Błąd zapisu do bazy:", err);
+  } finally {
+    await client.end();
+  }
+}
 
 const app = express();
 app.use(cors());
@@ -23,35 +82,10 @@ let deltacount = 0.0;
 let deltadeath = 0.0;
 //const count = [0,0,0,0,false,new Date()]; // liczba w pamięci
 let ran=0;
-  // Tworzymy tabelę, jeśli nie istnieje
-  await client.query(`
-    CREATE TABLE IF NOT EXISTS count_data (
-      id SERIAL PRIMARY KEY,
-      values_json JSON NOT NULL
-    )
-  `);
-
-  // Wczytujemy dane, jeśli są zapisane
-  const res = await client.query('SELECT values_json FROM count_data WHERE id = 1');
-  if (res.rows.length > 0) {
-    count = res.rows[0].values_json;
-    console.log('📥 Wczytano dane z bazy:', count);
-  } else {
-    // Pierwsze uruchomienie — wstaw pusty rekord
-    await client.query('INSERT INTO count_data (id, values_json) VALUES (1, $1)', [count]);
-  }
-}
-
-// Funkcja zapisu
-async function saveData() {
-  await client.query('UPDATE count_data SET values_json = $1 WHERE id = 1', [count]);
-  console.log('💾 Dane zapisane do bazy:', new Date().toLocaleString());
-}
-
-// Uruchamiamy inicjalizację
-init();
 
 
+
+fetchData();
 
 setInterval(() => {
   deltacount=count[0]*5*Math.pow(10,-10);
@@ -112,11 +146,10 @@ app.post("/click", (req, res) => {
     }
     res.json({ count: count[0] });
 });
-
+setInterval(saveData, 60 * 1000); // co 60 sekund
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Nasłuchuję na porcie ${PORT}`));
 
-// Zapis co 10 minut
-setInterval(saveData, 10 * 60 * 1000);
+
 
 
