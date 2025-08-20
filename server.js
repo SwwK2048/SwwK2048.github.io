@@ -3,9 +3,6 @@ const fs = require('fs');
 const express = require('express');
 const { Client } = require('pg');
 
-
-// Lepiej trzymać dane dostępowe w zmiennych środowiskowych, ale na początek:
-const connectionString = 'postgresql://count_db_user:CWIVhCDzyu6wJpcCGBS6rw067Uh0e25J@dpg-d2i8bap5pdvs73evk21g-a.frankfurt-postgres.render.com/count_db';
 //let count = [0, 0, 0, 0, false, new Date()]; 
 async function fetchData() {
   const client = new Client({
