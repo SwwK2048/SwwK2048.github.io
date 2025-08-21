@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <meta charset="UTF-8">
-    <title>Parallel universe</title>
+    <title>Równoległy wszechświat</title>
     <style>
         body {
             background-color: lightblue; /* nazwa koloru */
@@ -50,12 +49,11 @@
     </style>
 </head>
 <body>
-
-    <h1>In parallel universe there is a earth just like ours</h1>
+    <h1>W równoległym wszechświecie jest ziemia, zupełnie jak nasza</h1>
     <img src="earth_spinning.gif" width="300" height="300" class="gif-center">
     <div class="corner-text"><a href="podstrona_pl.html">PL</a>|<a href="podstrona.html">ENG</a></div>
-    <div class="left-corner"><a href="index.html">return to homepage</a></div>
-    <p>people live there in peace</p>
+    <div class="left-corner"><a href="homepage_pl.html">Wróć do strony głównej</a></div>
+    <p>Ludzie żyją na niej w spokoju</p>
     <span style="
         text-align:left;
         position: absolute;
@@ -64,18 +62,18 @@
     ">
     <table>
         <tr>
-        <td>Server started 18 september 2025</td>
+        <td>Serwer wystartował 18 sierpnia 2025 roku</td>
         </tr>
         <tr>
-        <td>Born since start:</td>
+        <td>Urodziło się:</td>
         <td><div id="born"></div></td>
         </tr>
         <tr>
-        <td>Die naturally since start:</td>
+        <td>Zmarło z przyczyn natutalnych:</td>
         <td><div id="die"></div></td>
         </tr>
         <tr>
-        <td>Die by clicking since start:</td>
+        <td>Zmarło w wyniku klikania:</td>
         <td><div id="kill"></div></td>
         </tr>
         <tr>
@@ -86,26 +84,26 @@
 
     <div id="counter"></div>
 
-    <p>to be exact. <br> <br> <br>But every time this button is clicked</p>
-    <button id="clickBtn" type="button">Click me!</button>
-    <p>One of them die. <br> Help me to kill them all! </p>
+    <p>żeby doprecyzować <br> <br> <br>Ale za każdym razem, gry ten guzik jest wciskany</p>
+    <button id="clickBtn" type="button">Kliknij mnie!</button>
+    <p>Jeden z nich umiera. <br> Pomóż mi zabić ich wszystkich! </p>
 
     <script>
         async function getCount() {
             const res = await fetch("https://swwk2048-github-io.onrender.com/count");
             const data = await res.json();
             if (data.count[0]>0){
-                document.getElementById("counter").textContent = `${data.count[0]} people`;
+                document.getElementById("counter").textContent = `${data.count[0]} ludzi`;
             }
             else{
-                document.getElementById("counter").textContent = `Congratulation you killed them all!`;
+                document.getElementById("counter").textContent = `Gratulacje, zabiliście ich wszystkich!`;
             }
             document.getElementById("born").textContent = data.count[1];
             document.getElementById("die").textContent = data.count[2];
             document.getElementById("kill").textContent = data.count[3];
             document.getElementById("all").textContent = data.count;
             if (data.count[4]){
-                document.getElementById("date").innerHTML = `Date you kil them all:<br>${data.count[5]} `;
+                document.getElementById("date").innerHTML = `Dzień, wktórym zabiliście ich wszystkich:<br>${data.count[5]} `;
             }
         }
 
@@ -113,10 +111,10 @@
             const res = await fetch("https://swwk2048-github-io.onrender.com/click", { method: "POST" });
             const data = await res.json();
             if (data.count>0){
-                document.getElementById("counter").textContent = `${data.count} people`;
+                document.getElementById("counter").textContent = `${data.count} ludzi`;
             }
             else{
-                document.getElementById("counter").textContent = `Congratulation you killed them all!`;
+                document.getElementById("counter").textContent = `Gratulacje zabiliście ich wszystkich!`;
             }
         }
 
