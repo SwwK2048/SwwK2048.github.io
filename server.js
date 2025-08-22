@@ -131,8 +131,22 @@ app.get("/count", (req, res) => {
 
 app.post("/click", (req, res) => {
     if (count[0]>0){
-      count[0]--;
-      count[3]++;
+      ran=Math.random();
+      if (ran<0.008){
+        count[0]-=1000;
+        count[3]+=1000;
+      }
+      else if(ran<0.04){
+        count[0]-=100;
+        count[3]+=100;
+      }
+      else if(ran<0.20){
+        count[0]-=10;
+        count[3]+=10;
+      }else{
+        count[0]--;
+        count[3]++;
+      }
     }
     else{
       if(count[4]==false){
