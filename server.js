@@ -2,7 +2,7 @@ const cors = require('cors');
 const fs = require('fs');
 const express = require('express');
 const { Client } = require('pg');
-
+const connectionString = process.env.connectionString;
 //let count = [0, 0, 0, 0, false, new Date()]; 
 async function fetchData() {
   const client = new Client({
