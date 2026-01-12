@@ -5,7 +5,7 @@
   <meta name="author" content="Stanisław Walczak">
   <title> Mancala </title>
 </head>
-<body style="background-image: url('img/black\ hole.png'); background-size: cover;"  background-position: center; background-repeat: no-repeat; >
+<body >
   <style>
   header {
     position: relative;
@@ -28,6 +28,8 @@
   <p> Maybe the real Mancala was the friends we made along the way.</p>
   <button onclick="startGame()">  play </button>
   <button onclick="berdly()"> do no play </button>
+  <button id="instructions" onclick = "show_instructions()">Show instruction</button>
+  <p id="instructions2"></p>
   <img src="img/berdly.jpg" >
   <script>
     function startGame() {
@@ -35,6 +37,29 @@
     }
     function berdly(){
         alert("That's right! nobody can defeat Berdly so why even try?");
+    }
+    let show_ins = false;
+
+    function show_instructions(){
+      show_ins = show_ins?false:true;
+      if(show_ins){
+        document.getElementById("instructions").textContent = "Hide instructions";
+        document.getElementById("instructions2").innerHTML = "First player chooses a circle on their own side, picks up the stones in that space, and starting with the next space, drops <br> \
+          one stone in each space going counterclockwise (including the Store) until all of the stones are played out.<br>\
+          Now it is the other player\’s turn to do the same using stones on their side and continuing to play counterclockwise.<br>\
+          Note: if there are enough stones to reach the other player\’s Store, skip that space and continue on your own.<br>\
+          If your last stone goes into your Store, you get to go again.*<br>\
+          If your last stone goes into an empty space on your side, move that stone and any captured stones ( those directly across<br>\
+          on your opponent\’s side) to your Store.*<br>\
+          The game ends when either player has no more stones in their six circles. The remaining stones go to the other player\’s \
+          Store.<br>\
+          The winner is the player with the most stones in their Store.<br> \
+          source: https://ospi.k12.wa.us/sites/default/files/2023-08/mancala-rules-ada.pdf";
+      }else{
+        document.getElementById("instructions").textContent = "Show instructions";
+        document.getElementById("instructions2").textContent = "";
+      }
+
     }
     // Tu możesz zacząć pisać mancalę, może na razie niech będzie rozgrywana w konsoli?
     // na początek tylko na jednym urządzeniu
